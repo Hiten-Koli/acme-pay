@@ -85,6 +85,16 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
     steps:
       - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      # Migrations are backward-compatible (expand, then contract), so they run before the
+      # new code is live and the running version never sees a schema it cannot handle.
+      - name: Migrate production database
+        working-directory: backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: uv sync --locked && uv run alembic upgrade head
       - name: Deploy API
         working-directory: backend
         env:
