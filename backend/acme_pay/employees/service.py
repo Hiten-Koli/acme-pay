@@ -41,9 +41,13 @@ class EmployeeService:
         """
         return await self._employees.get_existing(employee_id)
 
-    async def list(self, filters: EmployeeFilters) -> tuple[list[Employee], int]:
+    async def search(self, filters: EmployeeFilters) -> tuple[list[Employee], int]:
         """Return one page of employees matching ``filters`` and the total."""
         return await self._employees.page(filters)
+
+    async def export(self, filters: EmployeeFilters) -> list[Employee]:
+        """Return all employees matching ``filters`` for export."""
+        return await self._employees.all(filters)
 
     async def hire(self, data: EmployeeCreate) -> Employee:
         """Create an employee and record their starting salary in the history.

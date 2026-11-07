@@ -1,9 +1,11 @@
 """HTTP endpoints for employees. Thin: validation in schemas, rules in the service."""
 
+import csv
+import io
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from acme_pay.core.database import get_session
@@ -38,12 +40,46 @@ async def list_employees(
     service: Service, filters: Annotated[EmployeeFilters, Query()]
 ) -> EmployeePage:
     """Search, filter, sort and page through employees."""
-    employees, total = await service.list(filters)
+    employees, total = await service.search(filters)
     return EmployeePage(
         items=[EmployeeRead.model_validate(e) for e in employees],
         total=total,
         page=filters.page,
         page_size=filters.page_size,
+    )
+
+
+CSV_COLUMNS = (
+    "employee_code",
+    "first_name",
+    "last_name",
+    "email",
+    "job_title",
+    "department",
+    "country_code",
+    "currency",
+    "salary",
+    "hire_date",
+    "status",
+    "terminated_on",
+)
+
+
+# Declared before /{employee_id} so "export.csv" is not parsed as an id.
+@router.get("/export.csv", response_class=Response)
+async def export_employees(
+    service: Service, filters: Annotated[EmployeeFilters, Query()]
+) -> Response:
+    """Download the filtered directory as CSV (opens in Excel)."""
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(CSV_COLUMNS)
+    for employee in await service.export(filters):
+        writer.writerow(getattr(employee, column) for column in CSV_COLUMNS)
+    return Response(
+        buffer.getvalue(),
+        media_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="acme-pay-employees.csv"'},
     )
 
 

@@ -20,6 +20,20 @@ COUNTRY_CURRENCIES: dict[str, str] = {
 }
 
 
+COUNTRY_NAMES: dict[str, str] = {
+    "US": "United States",
+    "CA": "Canada",
+    "BR": "Brazil",
+    "GB": "United Kingdom",
+    "DE": "Germany",
+    "FR": "France",
+    "IN": "India",
+    "SG": "Singapore",
+    "JP": "Japan",
+    "AU": "Australia",
+}
+
+
 class EmploymentStatus(StrEnum):
     """Whether someone currently works at ACME."""
 

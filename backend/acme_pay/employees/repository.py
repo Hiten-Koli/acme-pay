@@ -67,6 +67,11 @@ class EmployeeRepository:
             raise NotFoundError(f"Employee {employee_id} not found")
         return employee
 
+    async def all(self, filters: EmployeeFilters) -> list[Employee]:
+        """Return every employee matching ``filters`` (ignores paging), in sort order."""
+        query = _filtered(filters).order_by(*_ORDERING[filters.sort], Employee.id)
+        return list(await self._session.scalars(query))
+
     async def page(self, filters: EmployeeFilters) -> tuple[list[Employee], int]:
         """Return one page of employees matching ``filters`` and the total match count."""
         query = _filtered(filters)
