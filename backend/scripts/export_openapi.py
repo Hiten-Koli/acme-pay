@@ -13,7 +13,9 @@ from acme_pay.main import create_app
 def main() -> None:
     """Export the schema to the path given as the first argument."""
     target = Path(sys.argv[1])
-    target.write_text(json.dumps(create_app().openapi(), indent=2) + "\n", encoding="utf-8")
+    schema = json.dumps(create_app().openapi(), indent=2) + "\n"
+    # LF on every OS, so the committed contract diffs cleanly against CI's export.
+    target.write_text(schema, encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":
