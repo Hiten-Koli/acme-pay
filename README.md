@@ -21,6 +21,10 @@
 |---|---|
 | ![Profile with raise preview](docs/screenshots/profile-raise-preview.png) | ![Benchmarks](docs/screenshots/benchmarks.png) |
 
+**Ask ACME Pay:** a live answer from Gemini, with the evidence it used.
+
+![Ask ACME Pay](docs/screenshots/ask-acme-pay.png)
+
 ## How it is built
 **Backend:** Python 3.13, FastAPI, SQLAlchemy 2 (async), Alembic, PostgreSQL 17 (Neon). **Frontend:** React 19, TypeScript, Vite, TanStack Router and Query, shadcn/ui, Tailwind v4. **Delivery:** GitHub Actions to Vercel. All on free tiers.
 
