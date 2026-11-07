@@ -945,10 +945,113 @@
           }
         }
       }
+    },
+    "/api/assistant/status": {
+      "get": {
+        "tags": [
+          "assistant"
+        ],
+        "summary": "Status",
+        "description": "Report whether a model is configured.",
+        "operationId": "status_api_assistant_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assistant/ask": {
+      "post": {
+        "tags": [
+          "assistant"
+        ],
+        "summary": "Ask",
+        "description": "Answer a pay question, with the data it is based on.\n\nRaises:\n    LLMUnavailableError: If no model is configured or the provider fails (HTTP 503).",
+        "operationId": "ask_api_assistant_ask_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Answer"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "Answer": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            },
+            "type": "array",
+            "title": "Evidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "evidence"
+        ],
+        "title": "Answer",
+        "description": "The analyst's answer and the evidence behind it."
+      },
+      "AskRequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Question"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "AskRequest",
+        "description": "A pay question in plain language."
+      },
       "BandPosition": {
         "type": "string",
         "enum": [
@@ -1533,6 +1636,32 @@
         "title": "EmploymentStatus",
         "description": "Whether someone currently works at ACME."
       },
+      "Evidence": {
+        "properties": {
+          "tool": {
+            "type": "string",
+            "title": "Tool"
+          },
+          "arguments": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Arguments"
+          },
+          "result": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Result"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tool",
+          "arguments",
+          "result"
+        ],
+        "title": "Evidence",
+        "description": "One tool call the answer is based on, with the data it returned."
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -1604,7 +1733,7 @@
           "job_titles"
         ],
         "title": "Options",
-        "description": "Values the UI offers in dropdowns."
+        "description": "Values the UI offers in dropdowns (and the assistant uses to map names)."
       },
       "Outlier": {
         "properties": {
@@ -2060,6 +2189,20 @@
         ],
         "title": "Signal",
         "description": "A peer group where people are paid below band: somewhere HR should look."
+      },
+      "Status": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "title": "Status",
+        "description": "Whether the assistant can be used (the UI hides it otherwise)."
       },
       "TerminationRequest": {
         "properties": {

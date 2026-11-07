@@ -161,3 +161,19 @@ class Preview(BaseModel):
     change_percent: Decimal
     annual_cost_change_usd: Decimal | None
     peer_median: Decimal | None
+
+
+class Country(BaseModel):
+    """A country ACME operates in."""
+
+    code: str
+    name: str
+    currency: str
+
+
+class Options(BaseModel):
+    """Values the UI offers in dropdowns (and the assistant uses to map names)."""
+
+    countries: list[Country]
+    departments: list[str]
+    job_titles: list[str]

@@ -21,6 +21,10 @@ class ConflictError(Exception):
     """The request conflicts with existing data, e.g. a duplicate unique value."""
 
 
+class ServiceUnavailableError(Exception):
+    """A dependency the request needs (e.g. an external model) cannot be used right now."""
+
+
 def problem(status: int, detail: str, **extensions: Any) -> JSONResponse:
     """Build a Problem Details response (RFC 9457)."""
     body = {
@@ -43,6 +47,10 @@ def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ConflictError)
     async def conflict(_: Request, exc: ConflictError) -> JSONResponse:
         return problem(HTTPStatus.CONFLICT, str(exc))
+
+    @app.exception_handler(ServiceUnavailableError)
+    async def unavailable(_: Request, exc: ServiceUnavailableError) -> JSONResponse:
+        return problem(HTTPStatus.SERVICE_UNAVAILABLE, str(exc))
 
     @app.exception_handler(BusinessRuleViolation)
     async def rule_violation(_: Request, exc: BusinessRuleViolation) -> JSONResponse:

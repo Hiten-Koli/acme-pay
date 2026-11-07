@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 
 from acme_pay import health, meta
+from acme_pay.assistant import router as assistant
 from acme_pay.compensation import router as compensation
 from acme_pay.core.errors import register_error_handlers
 from acme_pay.employees import router as employees
@@ -25,6 +26,7 @@ def create_app() -> FastAPI:
     app.include_router(compensation.router, prefix=API_PREFIX)
     app.include_router(insights.router, prefix=API_PREFIX)
     app.include_router(meta.router, prefix=API_PREFIX)
+    app.include_router(assistant.router, prefix=API_PREFIX)
     return app
 
 

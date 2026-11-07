@@ -6,17 +6,19 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from acme_pay.domain.compa_ratio import BandPosition, band_position, compa_ratio
-from acme_pay.domain.employment import COUNTRY_CURRENCIES
+from acme_pay.domain.employment import COUNTRY_CURRENCIES, COUNTRY_NAMES
 from acme_pay.domain.money import CENT, Money
 from acme_pay.employees.repository import EmployeeRepository
 from acme_pay.insights.repository import InsightsRepository
 from acme_pay.insights.schemas import (
     Benchmarks,
     Bucket,
+    Country,
     CountryBenchmark,
     CountryPay,
     DepartmentPay,
     Distribution,
+    Options,
     Outlier,
     PayPosition,
     PeerStats,
@@ -56,6 +58,21 @@ class InsightsService:
             countries=[CountryPay.model_validate(dict(row)) for row in countries],
             departments=[DepartmentPay.model_validate(dict(row)) for row in departments],
             signals=[Signal.model_validate(dict(row)) for row in signals],
+        )
+
+    async def options(self) -> Options:
+        """Countries ACME operates in, and departments and job titles currently in use."""
+        countries = sorted(
+            (
+                Country(code=code, name=COUNTRY_NAMES[code], currency=currency)
+                for code, currency in COUNTRY_CURRENCIES.items()
+            ),
+            key=lambda country: country.name,
+        )
+        return Options(
+            countries=countries,
+            departments=await self._insights.distinct_values("department"),
+            job_titles=await self._insights.distinct_values("job_title"),
         )
 
     async def benchmarks(self, job_title: str) -> Benchmarks:

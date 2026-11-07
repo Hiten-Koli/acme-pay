@@ -276,10 +276,71 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/assistant/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Status
+         * @description Report whether a model is configured.
+         */
+        get: operations["status_api_assistant_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assistant/ask": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ask
+         * @description Answer a pay question, with the data it is based on.
+         *
+         *     Raises:
+         *         LLMUnavailableError: If no model is configured or the provider fails (HTTP 503).
+         */
+        post: operations["ask_api_assistant_ask_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * Answer
+         * @description The analyst's answer and the evidence behind it.
+         */
+        Answer: {
+            /** Answer */
+            answer: string;
+            /** Evidence */
+            evidence: components["schemas"]["Evidence"][];
+        };
+        /**
+         * AskRequest
+         * @description A pay question in plain language.
+         */
+        AskRequest: {
+            /** Question */
+            question: string;
+        };
         /**
          * BandPosition
          * @description Where a compa-ratio falls relative to the pay band.
@@ -530,6 +591,22 @@ export interface components {
          * @enum {string}
          */
         EmploymentStatus: "active" | "terminated";
+        /**
+         * Evidence
+         * @description One tool call the answer is based on, with the data it returned.
+         */
+        Evidence: {
+            /** Tool */
+            tool: string;
+            /** Arguments */
+            arguments: {
+                [key: string]: unknown;
+            };
+            /** Result */
+            result: {
+                [key: string]: unknown;
+            };
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -553,7 +630,7 @@ export interface components {
         };
         /**
          * Options
-         * @description Values the UI offers in dropdowns.
+         * @description Values the UI offers in dropdowns (and the assistant uses to map names).
          */
         Options: {
             /** Countries */
@@ -719,6 +796,14 @@ export interface components {
             below_band: number;
             /** Median Salary */
             median_salary: string;
+        };
+        /**
+         * Status
+         * @description Whether the assistant can be used (the UI hides it otherwise).
+         */
+        Status: {
+            /** Enabled */
+            enabled: boolean;
         };
         /**
          * TerminationRequest
@@ -1246,6 +1331,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Options"];
+                };
+            };
+        };
+    };
+    status_api_assistant_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Status"];
+                };
+            };
+        };
+    };
+    ask_api_assistant_ask_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AskRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Answer"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

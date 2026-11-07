@@ -11,12 +11,16 @@ class Settings(BaseSettings):
     Attributes:
         database_url: PostgreSQL connection URL. Any `postgresql://` URL works,
             including Neon's, and is adapted for the async driver at startup.
+        gemini_api_key: Enables the AI pay analyst when set (Google AI Studio, free tier).
+        gemini_model: Gemini model id; a free-tier Flash model by default.
     """
 
     model_config = SettingsConfigDict(env_file=(".env", "../.env"), extra="ignore")
 
     # Local-development default matching docker-compose.yml; never used in production.
     database_url: str = "postgresql://acme:acme@localhost:5432/acme_pay"
+    gemini_api_key: str | None = None
+    gemini_model: str = "gemini-3.8-flash"
 
 
 @lru_cache
