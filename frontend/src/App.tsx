@@ -1,15 +1,12 @@
-import { ApiStatus } from './features/health/ApiStatus'
+import { RouterProvider } from '@tanstack/react-router'
+import { router } from '@/app/router'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
-/**
- * Root application component.
- *
- * Placeholder shell until the design system and routing land (roadmap milestone 6).
- */
+/** Root component: routing and shared UI providers. */
 export default function App() {
   return (
-    <main>
-      <h1>ACME Pay</h1>
-      <ApiStatus />
-    </main>
+    <TooltipProvider>
+      <RouterProvider router={router} />
+    </TooltipProvider>
   )
 }
