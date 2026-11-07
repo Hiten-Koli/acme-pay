@@ -48,6 +48,12 @@ jobs:
         run: uv run alembic upgrade head && uv run alembic check
       - name: Test
         run: uv run pytest --cov
+      # The frontend's types are generated from this API; fail if they were not regenerated.
+      - name: API contract is up to date
+        run: |
+          uv run python scripts/export_openapi.py ../frontend/src/api/openapi.json
+          npx -y openapi-typescript@7.13.0 ../frontend/src/api/openapi.json -o ../frontend/src/api/schema.d.ts
+          git diff --exit-code -- ../frontend/src/api
 
   frontend:
     name: Frontend checks

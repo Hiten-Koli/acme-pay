@@ -1,0 +1,2122 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ACME Pay API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "description": "Report whether the API and its database are working.",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employees": {
+      "get": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "List Employees",
+        "description": "Search, filter, sort and page through employees.",
+        "operationId": "list_employees_api_employees_get",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z]{2}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Country"
+            }
+          },
+          {
+            "name": "department",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Department"
+            }
+          },
+          {
+            "name": "job_title",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Job Title"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/EmploymentStatus",
+              "default": "active"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/EmployeeSort",
+              "default": "name"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 25,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeePage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Hire Employee",
+        "description": "Add a new employee with their starting salary.",
+        "operationId": "hire_employee_api_employees_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employees/export.csv": {
+      "get": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Export Employees",
+        "description": "Download the filtered directory as CSV (opens in Excel).",
+        "operationId": "export_employees_api_employees_export_csv_get",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z]{2}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Country"
+            }
+          },
+          {
+            "name": "department",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Department"
+            }
+          },
+          {
+            "name": "job_title",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Job Title"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/EmploymentStatus",
+              "default": "active"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/EmployeeSort",
+              "default": "name"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 25,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employees/{employee_id}": {
+      "get": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Get Employee",
+        "description": "Return one employee.",
+        "operationId": "get_employee_api_employees__employee_id__get",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Employee Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Update Employee",
+        "description": "Update profile fields (not salary).",
+        "operationId": "update_employee_api_employees__employee_id__patch",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Employee Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employees/{employee_id}/terminate": {
+      "post": {
+        "tags": [
+          "employees"
+        ],
+        "summary": "Terminate Employee",
+        "description": "Record that an employee has left.",
+        "operationId": "terminate_employee_api_employees__employee_id__terminate_post",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Employee Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TerminationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmployeeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employees/{employee_id}/compensation": {
+      "get": {
+        "tags": [
+          "compensation"
+        ],
+        "summary": "Salary History",
+        "description": "Return the employee's salary history, newest first.",
+        "operationId": "salary_history_api_employees__employee_id__compensation_get",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Employee Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompensationChangeRead"
+                  },
+                  "title": "Response Salary History Api Employees  Employee Id  Compensation Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "compensation"
+        ],
+        "summary": "Change Salary",
+        "description": "Give the employee a new salary and record why.",
+        "operationId": "change_salary_api_employees__employee_id__compensation_post",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Employee Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalaryChangeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompensationChangeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/insights/pulse": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Pulse",
+        "description": "Organization-wide pay at a glance.",
+        "operationId": "pulse_api_insights_pulse_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pulse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/insights/benchmarks": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Benchmarks",
+        "description": "Compare one role's pay across countries.",
+        "operationId": "benchmarks_api_insights_benchmarks_get",
+        "parameters": [
+          {
+            "name": "job_title",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Job Title"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Benchmarks"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/insights/distribution": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Distribution",
+        "description": "Salary histogram (local currency for one country, otherwise USD).",
+        "operationId": "distribution_api_insights_distribution_get",
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z]{2}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Country"
+            }
+          },
+          {
+            "name": "department",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Department"
+            }
+          },
+          {
+            "name": "job_title",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Job Title"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Distribution"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/insights/outliers": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Outliers",
+        "description": "People paid outside the band for their peer group, most extreme first.",
+        "operationId": "outliers_api_insights_outliers_get",
+        "parameters": [
+          {
+            "name": "band",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/BandPosition"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Band"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-Za-z]{2}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Country"
+            }
+          },
+          {
+            "name": "job_title",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Job Title"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Outlier"
+                  },
+                  "title": "Response Outliers Api Insights Outliers Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employees/{employee_id}/pay-position": {
+      "get": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Pay Position",
+        "description": "Where one employee's salary sits among their peers.",
+        "operationId": "pay_position_api_employees__employee_id__pay_position_get",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Employee Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayPosition"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/employees/{employee_id}/compensation/preview": {
+      "post": {
+        "tags": [
+          "insights"
+        ],
+        "summary": "Preview Salary Change",
+        "description": "Show the effect of a proposed salary without saving it.",
+        "operationId": "preview_salary_change_api_employees__employee_id__compensation_preview_post",
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Employee Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Preview"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meta/options": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Options",
+        "description": "Countries ACME operates in, and departments and job titles currently in use.",
+        "operationId": "options_api_meta_options_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Options"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BandPosition": {
+        "type": "string",
+        "enum": [
+          "below",
+          "within",
+          "above"
+        ],
+        "title": "BandPosition",
+        "description": "Where a compa-ratio falls relative to the pay band."
+      },
+      "Benchmarks": {
+        "properties": {
+          "job_title": {
+            "type": "string",
+            "title": "Job Title"
+          },
+          "countries": {
+            "items": {
+              "$ref": "#/components/schemas/CountryBenchmark"
+            },
+            "type": "array",
+            "title": "Countries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_title",
+          "countries"
+        ],
+        "title": "Benchmarks",
+        "description": "One role compared across countries."
+      },
+      "Bucket": {
+        "properties": {
+          "lower": {
+            "type": "string",
+            "title": "Lower"
+          },
+          "upper": {
+            "type": "string",
+            "title": "Upper"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lower",
+          "upper",
+          "count"
+        ],
+        "title": "Bucket",
+        "description": "One histogram bar: salaries from ``lower`` (inclusive) to ``upper``."
+      },
+      "CompensationChangeRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "previous_salary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous Salary"
+          },
+          "new_salary": {
+            "type": "string",
+            "title": "New Salary"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "effective_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Effective Date"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/CompensationReason"
+          },
+          "changed_by": {
+            "type": "string",
+            "title": "Changed By"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "previous_salary",
+          "new_salary",
+          "currency",
+          "effective_date",
+          "reason",
+          "changed_by",
+          "created_at"
+        ],
+        "title": "CompensationChangeRead",
+        "description": "One entry in an employee's salary history. Amounts are decimal strings."
+      },
+      "CompensationReason": {
+        "type": "string",
+        "enum": [
+          "hire",
+          "merit",
+          "promotion",
+          "market_adjustment",
+          "correction"
+        ],
+        "title": "CompensationReason",
+        "description": "Why a salary was set or changed."
+      },
+      "Country": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "currency"
+        ],
+        "title": "Country",
+        "description": "A country ACME operates in."
+      },
+      "CountryBenchmark": {
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "title": "Country Code"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "headcount": {
+            "type": "integer",
+            "title": "Headcount"
+          },
+          "min": {
+            "type": "string",
+            "title": "Min"
+          },
+          "p25": {
+            "type": "string",
+            "title": "P25"
+          },
+          "median": {
+            "type": "string",
+            "title": "Median"
+          },
+          "p75": {
+            "type": "string",
+            "title": "P75"
+          },
+          "max": {
+            "type": "string",
+            "title": "Max"
+          },
+          "average": {
+            "type": "string",
+            "title": "Average"
+          },
+          "p25_usd": {
+            "type": "string",
+            "title": "P25 Usd"
+          },
+          "median_usd": {
+            "type": "string",
+            "title": "Median Usd"
+          },
+          "p75_usd": {
+            "type": "string",
+            "title": "P75 Usd"
+          }
+        },
+        "type": "object",
+        "required": [
+          "country_code",
+          "currency",
+          "headcount",
+          "min",
+          "p25",
+          "median",
+          "p75",
+          "max",
+          "average",
+          "p25_usd",
+          "median_usd",
+          "p75_usd"
+        ],
+        "title": "CountryBenchmark",
+        "description": "Pay statistics for one role in one country."
+      },
+      "CountryPay": {
+        "properties": {
+          "headcount": {
+            "type": "integer",
+            "title": "Headcount"
+          },
+          "payroll_usd": {
+            "type": "string",
+            "title": "Payroll Usd"
+          },
+          "median_salary_usd": {
+            "type": "string",
+            "title": "Median Salary Usd"
+          },
+          "country_code": {
+            "type": "string",
+            "title": "Country Code"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          }
+        },
+        "type": "object",
+        "required": [
+          "headcount",
+          "payroll_usd",
+          "median_salary_usd",
+          "country_code",
+          "currency"
+        ],
+        "title": "CountryPay",
+        "description": "Pay in one country."
+      },
+      "DepartmentPay": {
+        "properties": {
+          "headcount": {
+            "type": "integer",
+            "title": "Headcount"
+          },
+          "payroll_usd": {
+            "type": "string",
+            "title": "Payroll Usd"
+          },
+          "median_salary_usd": {
+            "type": "string",
+            "title": "Median Salary Usd"
+          },
+          "department": {
+            "type": "string",
+            "title": "Department"
+          }
+        },
+        "type": "object",
+        "required": [
+          "headcount",
+          "payroll_usd",
+          "median_salary_usd",
+          "department"
+        ],
+        "title": "DepartmentPay",
+        "description": "Pay in one department."
+      },
+      "Distribution": {
+        "properties": {
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "buckets": {
+            "items": {
+              "$ref": "#/components/schemas/Bucket"
+            },
+            "type": "array",
+            "title": "Buckets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "currency",
+          "buckets"
+        ],
+        "title": "Distribution",
+        "description": "Salary histogram; local currency when filtered to a country, otherwise USD."
+      },
+      "EmployeeCreate": {
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "title": "Email"
+          },
+          "job_title": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Job Title"
+          },
+          "department": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Department"
+          },
+          "country_code": {
+            "type": "string",
+            "pattern": "^[A-Za-z]{2}$",
+            "title": "Country Code"
+          },
+          "salary": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Salary"
+          },
+          "hire_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Hire Date"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "first_name",
+          "last_name",
+          "email",
+          "job_title",
+          "department",
+          "country_code",
+          "salary",
+          "hire_date"
+        ],
+        "title": "EmployeeCreate",
+        "description": "A new hire. The currency follows from the country."
+      },
+      "EmployeePage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EmployeeRead"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size"
+        ],
+        "title": "EmployeePage",
+        "description": "One page of employees plus the total matching the filters."
+      },
+      "EmployeeRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "employee_code": {
+            "type": "string",
+            "title": "Employee Code"
+          },
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "job_title": {
+            "type": "string",
+            "title": "Job Title"
+          },
+          "department": {
+            "type": "string",
+            "title": "Department"
+          },
+          "country_code": {
+            "type": "string",
+            "title": "Country Code"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "salary": {
+            "type": "string",
+            "title": "Salary"
+          },
+          "hire_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Hire Date"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EmploymentStatus"
+          },
+          "terminated_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Terminated On"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "employee_code",
+          "first_name",
+          "last_name",
+          "email",
+          "job_title",
+          "department",
+          "country_code",
+          "currency",
+          "salary",
+          "hire_date",
+          "status",
+          "terminated_on"
+        ],
+        "title": "EmployeeRead",
+        "description": "An employee as returned by the API. ``salary`` is a decimal string in ``currency``."
+      },
+      "EmployeeSort": {
+        "type": "string",
+        "enum": [
+          "name",
+          "-name",
+          "salary",
+          "-salary",
+          "hire_date",
+          "-hire_date"
+        ],
+        "title": "EmployeeSort",
+        "description": "Supported orderings; a leading ``-`` means descending."
+      },
+      "EmployeeUpdate": {
+        "properties": {
+          "first_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Name"
+          },
+          "last_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Name"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254,
+                "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "job_title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Title"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "EmployeeUpdate",
+        "description": "Profile changes. Salary is excluded: it only changes through compensation history."
+      },
+      "EmploymentStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "terminated"
+        ],
+        "title": "EmploymentStatus",
+        "description": "Whether someone currently works at ACME."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthStatus": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status"
+          },
+          "database": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "unavailable"
+            ],
+            "title": "Database"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "database"
+        ],
+        "title": "HealthStatus",
+        "description": "Service health summary."
+      },
+      "Options": {
+        "properties": {
+          "countries": {
+            "items": {
+              "$ref": "#/components/schemas/Country"
+            },
+            "type": "array",
+            "title": "Countries"
+          },
+          "departments": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Departments"
+          },
+          "job_titles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Job Titles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "countries",
+          "departments",
+          "job_titles"
+        ],
+        "title": "Options",
+        "description": "Values the UI offers in dropdowns."
+      },
+      "Outlier": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "employee_code": {
+            "type": "string",
+            "title": "Employee Code"
+          },
+          "first_name": {
+            "type": "string",
+            "title": "First Name"
+          },
+          "last_name": {
+            "type": "string",
+            "title": "Last Name"
+          },
+          "job_title": {
+            "type": "string",
+            "title": "Job Title"
+          },
+          "country_code": {
+            "type": "string",
+            "title": "Country Code"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "salary": {
+            "type": "string",
+            "title": "Salary"
+          },
+          "peer_median": {
+            "type": "string",
+            "title": "Peer Median"
+          },
+          "compa_ratio": {
+            "type": "string",
+            "title": "Compa Ratio"
+          },
+          "band": {
+            "$ref": "#/components/schemas/BandPosition"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "employee_code",
+          "first_name",
+          "last_name",
+          "job_title",
+          "country_code",
+          "currency",
+          "salary",
+          "peer_median",
+          "compa_ratio",
+          "band"
+        ],
+        "title": "Outlier",
+        "description": "An active employee paid outside the band for their peer group."
+      },
+      "PayPosition": {
+        "properties": {
+          "salary": {
+            "type": "string",
+            "title": "Salary"
+          },
+          "compa_ratio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compa Ratio"
+          },
+          "band": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BandPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "peers": {
+            "$ref": "#/components/schemas/PeerStats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "salary",
+          "compa_ratio",
+          "band",
+          "peers"
+        ],
+        "title": "PayPosition",
+        "description": "Where one employee's salary sits among their peers."
+      },
+      "PeerStats": {
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "title": "Country Code"
+          },
+          "job_title": {
+            "type": "string",
+            "title": "Job Title"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "headcount": {
+            "type": "integer",
+            "title": "Headcount"
+          },
+          "p10": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P10"
+          },
+          "p25": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P25"
+          },
+          "median": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median"
+          },
+          "p75": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P75"
+          },
+          "p90": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P90"
+          }
+        },
+        "type": "object",
+        "required": [
+          "country_code",
+          "job_title",
+          "currency",
+          "headcount",
+          "p10",
+          "p25",
+          "median",
+          "p75",
+          "p90"
+        ],
+        "title": "PeerStats",
+        "description": "Active colleagues with the same job title in the same country."
+      },
+      "PositionSnapshot": {
+        "properties": {
+          "salary": {
+            "type": "string",
+            "title": "Salary"
+          },
+          "compa_ratio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compa Ratio"
+          },
+          "band": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BandPosition"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "salary",
+          "compa_ratio",
+          "band"
+        ],
+        "title": "PositionSnapshot",
+        "description": "A salary and where it sits against the peer median."
+      },
+      "Preview": {
+        "properties": {
+          "current": {
+            "$ref": "#/components/schemas/PositionSnapshot"
+          },
+          "proposed": {
+            "$ref": "#/components/schemas/PositionSnapshot"
+          },
+          "change_amount": {
+            "type": "string",
+            "title": "Change Amount"
+          },
+          "change_percent": {
+            "type": "string",
+            "title": "Change Percent"
+          },
+          "annual_cost_change_usd": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Annual Cost Change Usd"
+          },
+          "peer_median": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Peer Median"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current",
+          "proposed",
+          "change_amount",
+          "change_percent",
+          "annual_cost_change_usd",
+          "peer_median"
+        ],
+        "title": "Preview",
+        "description": "The effect of a proposed salary change, before it is made."
+      },
+      "PreviewRequest": {
+        "properties": {
+          "new_salary": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "New Salary"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "new_salary"
+        ],
+        "title": "PreviewRequest",
+        "description": "A proposed new salary to evaluate without saving it."
+      },
+      "Pulse": {
+        "properties": {
+          "rate_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Date"
+          },
+          "headcount": {
+            "type": "integer",
+            "title": "Headcount"
+          },
+          "payroll_usd": {
+            "type": "string",
+            "title": "Payroll Usd"
+          },
+          "median_salary_usd": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Salary Usd"
+          },
+          "below_band": {
+            "type": "integer",
+            "title": "Below Band"
+          },
+          "above_band": {
+            "type": "integer",
+            "title": "Above Band"
+          },
+          "countries": {
+            "items": {
+              "$ref": "#/components/schemas/CountryPay"
+            },
+            "type": "array",
+            "title": "Countries"
+          },
+          "departments": {
+            "items": {
+              "$ref": "#/components/schemas/DepartmentPay"
+            },
+            "type": "array",
+            "title": "Departments"
+          },
+          "signals": {
+            "items": {
+              "$ref": "#/components/schemas/Signal"
+            },
+            "type": "array",
+            "title": "Signals"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rate_date",
+          "headcount",
+          "payroll_usd",
+          "median_salary_usd",
+          "below_band",
+          "above_band",
+          "countries",
+          "departments",
+          "signals"
+        ],
+        "title": "Pulse",
+        "description": "Organization-wide pay at a glance (active employees, USD at dated FX rates)."
+      },
+      "SalaryChangeRequest": {
+        "properties": {
+          "new_salary": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "New Salary"
+          },
+          "effective_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Effective Date"
+          },
+          "reason": {
+            "$ref": "#/components/schemas/CompensationReason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "new_salary",
+          "effective_date",
+          "reason"
+        ],
+        "title": "SalaryChangeRequest",
+        "description": "A new salary for an employee, in their own currency."
+      },
+      "Signal": {
+        "properties": {
+          "country_code": {
+            "type": "string",
+            "title": "Country Code"
+          },
+          "job_title": {
+            "type": "string",
+            "title": "Job Title"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "headcount": {
+            "type": "integer",
+            "title": "Headcount"
+          },
+          "below_band": {
+            "type": "integer",
+            "title": "Below Band"
+          },
+          "median_salary": {
+            "type": "string",
+            "title": "Median Salary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "country_code",
+          "job_title",
+          "currency",
+          "headcount",
+          "below_band",
+          "median_salary"
+        ],
+        "title": "Signal",
+        "description": "A peer group where people are paid below band: somewhere HR should look."
+      },
+      "TerminationRequest": {
+        "properties": {
+          "terminated_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Terminated On"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "terminated_on"
+        ],
+        "title": "TerminationRequest",
+        "description": "When the employee leaves."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
