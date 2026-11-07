@@ -1,18 +1,23 @@
 import { Link, Outlet } from '@tanstack/react-router'
-import { BarChart3, Gauge, Users } from 'lucide-react'
+import { BarChart3, Gauge, Sparkles, Users } from 'lucide-react'
 import { CommandPalette } from '@/app/CommandPalette'
 import { ThemeToggle } from '@/app/ThemeToggle'
 import { Toaster } from '@/components/ui/sonner'
+import { useAssistantStatus } from '@/features/assistant/api'
 import { ApiStatus } from '@/features/health/ApiStatus'
 
 const NAV = [
   { to: '/', label: 'Pay Pulse', icon: Gauge },
   { to: '/people', label: 'People', icon: Users },
   { to: '/benchmarks', label: 'Benchmarks', icon: BarChart3 },
+  { to: '/ask', label: 'Ask ACME Pay', icon: Sparkles },
 ] as const
 
 /** Layout: navigation sidebar and the current page. */
 export function AppShell() {
+  // The AI analyst only appears when a model is configured on the server.
+  const assistant = useAssistantStatus()
+  const nav = NAV.filter((item) => item.to !== '/ask' || assistant.data?.enabled)
   return (
     <div className="flex min-h-svh flex-col md:flex-row">
       <aside className="flex shrink-0 flex-col gap-4 border-b bg-sidebar p-4 md:w-60 md:border-r md:border-b-0">
@@ -25,7 +30,7 @@ export function AppShell() {
         </div>
         <CommandPalette />
         <nav aria-label="Main" className="flex gap-1 md:flex-col">
-          {NAV.map(({ to, label, icon: Icon }) => (
+          {nav.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
               to={to}

@@ -64,8 +64,14 @@ const benchmarksRoute = createRoute({
   }),
 })
 
+const askRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/ask',
+  component: lazyRouteComponent(() => import('@/features/assistant/AskPage'), 'AskPage'),
+})
+
 export const router = createRouter({
-  routeTree: rootRoute.addChildren([pulseRoute, peopleRoute, benchmarksRoute]),
+  routeTree: rootRoute.addChildren([pulseRoute, peopleRoute, benchmarksRoute, askRoute]),
 })
 
 declare module '@tanstack/react-router' {
