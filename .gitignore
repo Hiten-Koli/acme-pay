@@ -23,6 +23,9 @@ npm-debug.log*
 .env.*
 !.env.example
 
+# Vercel CLI project links (local only)
+.vercel/
+
 # Databases
 *.sqlite3
 *.db

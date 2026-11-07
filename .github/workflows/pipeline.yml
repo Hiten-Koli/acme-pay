@@ -69,3 +69,32 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+
+  deploy:
+    name: Deploy to production
+    needs: [backend, frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://acme-pay-hiten.vercel.app
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Deploy API
+        working-directory: backend
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_API_PROJECT_ID }}
+        run: npx --yes vercel deploy --prod --yes --token "$VERCEL_TOKEN"
+      - name: Deploy web
+        working-directory: frontend
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_PROJECT_ID }}
+        run: npx --yes vercel deploy --prod --yes --token "$VERCEL_TOKEN"
+      - name: Smoke test (web → API → database)
+        run: >-
+          curl --fail --silent --show-error
+          --retry 5 --retry-delay 5 --retry-all-errors
+          https://acme-pay-hiten.vercel.app/api/health
