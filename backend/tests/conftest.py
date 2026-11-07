@@ -8,7 +8,7 @@ settings.register_profile("deterministic", derandomize=True)
 settings.load_profile("deterministic")
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def anyio_backend() -> str:
     """Run async tests on asyncio only (the event loop used in production)."""
     return "asyncio"

@@ -44,6 +44,8 @@ jobs:
         run: uv run ruff format --check .
       - name: Type check
         run: uv run mypy
+      - name: Migrations match models
+        run: uv run alembic upgrade head && uv run alembic check
       - name: Test
         run: uv run pytest --cov
 
