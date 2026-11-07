@@ -88,6 +88,8 @@ markers = ["integration: needs a running PostgreSQL (skip with -m 'not integrati
 [tool.coverage.run]
 source = ["acme_pay"]
 branch = true
+# SQLAlchemy's async layer runs code in greenlets; trace them too.
+concurrency = ["greenlet", "thread"]
 
 [tool.coverage.report]
 show_missing = true

@@ -6,6 +6,7 @@ from uuid import UUID
 from sqlalchemy import ColumnElement, Select, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from acme_pay.core.errors import NotFoundError
 from acme_pay.employees.models import Employee
 from acme_pay.employees.schemas import EmployeeFilters, EmployeeSort
 
@@ -54,6 +55,17 @@ class EmployeeRepository:
     async def get(self, employee_id: UUID) -> Employee | None:
         """Return the employee with ``employee_id``, or ``None``."""
         return await self._session.get(Employee, employee_id)
+
+    async def get_existing(self, employee_id: UUID) -> Employee:
+        """Return the employee with ``employee_id``.
+
+        Raises:
+            NotFoundError: If there is no such employee.
+        """
+        employee = await self.get(employee_id)
+        if employee is None:
+            raise NotFoundError(f"Employee {employee_id} not found")
+        return employee
 
     async def page(self, filters: EmployeeFilters) -> tuple[list[Employee], int]:
         """Return one page of employees matching ``filters`` and the total match count."""

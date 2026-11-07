@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from acme_pay.compensation.models import CompensationChange
-from acme_pay.core.errors import ConflictError, NotFoundError
+from acme_pay.core.errors import ConflictError
 from acme_pay.domain.employment import (
     CompensationReason,
     EmploymentStatus,
@@ -39,10 +39,7 @@ class EmployeeService:
         Raises:
             NotFoundError: If no employee has ``employee_id``.
         """
-        employee = await self._employees.get(employee_id)
-        if employee is None:
-            raise NotFoundError(f"Employee {employee_id} not found")
-        return employee
+        return await self._employees.get_existing(employee_id)
 
     async def list(self, filters: EmployeeFilters) -> tuple[list[Employee], int]:
         """Return one page of employees matching ``filters`` and the total."""
