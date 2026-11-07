@@ -190,7 +190,8 @@ class InsightsRepository:
         return await self._all(
             f"""
             SELECT id, employee_code, first_name, last_name, job_title, country_code, currency,
-                   salary, peer_median, compa_ratio
+                   salary, peer_median, compa_ratio,
+                   CASE WHEN compa_ratio < :band_low THEN 'below' ELSE 'above' END AS band
             FROM ranked
             WHERE {band_filter}
               AND {_optional("country_code", "country")}

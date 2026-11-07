@@ -110,6 +110,7 @@ class Outlier(BaseModel):
     salary: Decimal
     peer_median: Decimal
     compa_ratio: Decimal
+    band: BandPosition
 
 
 class PeerStats(BaseModel):

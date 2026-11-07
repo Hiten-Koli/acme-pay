@@ -156,6 +156,7 @@ async def test_outliers_lists_people_outside_band_with_their_ratio(
     [outlier] = outliers
     assert outlier["id"] == str(workforce["in_1_8m"])
     assert outlier["compa_ratio"] == "0.75"
+    assert outlier["band"] == "below"
     assert outlier["peer_median"] == "2400000.00"
 
 
