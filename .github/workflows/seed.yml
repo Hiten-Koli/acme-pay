@@ -1,0 +1,33 @@
+name: Seed production
+
+# Manual only: replaces ALL production data with the deterministic synthetic dataset.
+on:
+  workflow_dispatch:
+    inputs:
+      employees:
+        description: Number of employees to generate
+        default: "10000"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      - name: Migrate
+        run: uv run alembic upgrade head
+      - name: Seed
+        run: uv run python -m acme_pay.seed --employees "${{ inputs.employees }}"
