@@ -60,6 +60,9 @@ ignore = [
     "D107",     # __init__ documented on the class
 ]
 
+[tool.ruff.lint.isort]
+known-first-party = ["acme_pay"]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
