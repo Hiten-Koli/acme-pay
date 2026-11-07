@@ -35,3 +35,11 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Demo video build artifacts (the final MP4 in docs/demo is committed; these are not)
+docs/demo/audio/
+docs/demo/video/
+docs/demo/plan.json
+docs/demo/clips.json
+docs/demo/timeline.json
+docs/demo/narration.wav
