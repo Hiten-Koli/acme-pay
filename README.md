@@ -2,7 +2,8 @@
 
 **Insight-first salary management for HR.** ACME Pay replaces spreadsheet-based pay management for a 10,000-person, multi-country organization. It shows how the company pays people, records every pay change, and answers pay questions in plain English, with the figures shown as evidence.
 
-> **Status:** foundations in place; features in progress. Live demo and video links will appear here.
+> **Live:** https://acme-pay-hiten.vercel.app · **API docs:** https://acme-pay-hiten.vercel.app/api/docs
+> **Status:** walking skeleton deployed through the CI/CD pipeline; features in progress.
 
 ## Read this first
 | Document | What it tells you |
