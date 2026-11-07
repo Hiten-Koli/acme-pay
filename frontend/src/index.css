@@ -1,0 +1,5 @@
+/* Global styles. Replaced by Tailwind theme tokens in roadmap milestone 6. */
+:root {
+  font-family: system-ui, sans-serif;
+  color-scheme: light dark;
+}
