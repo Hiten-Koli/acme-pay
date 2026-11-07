@@ -57,9 +57,9 @@ FX_RATES_TO_USD: dict[str, Decimal] = {
 
 # Deliberate pay problems for the insights to surface: (country, job title, pay multiplier).
 UNDERPAID_GROUPS: list[tuple[str, str, Decimal]] = [
-    ("IN", "Data Scientist", Decimal("0.78")),
-    ("BR", "Account Executive", Decimal("0.80")),
-    ("GB", "Support Specialist", Decimal("0.82")),
+    ("IN", "Data Scientist", Decimal("0.68")),
+    ("BR", "Account Executive", Decimal("0.70")),
+    ("GB", "Support Specialist", Decimal("0.70")),
 ]
 
 FIRST_NAMES = [

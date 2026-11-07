@@ -26,6 +26,9 @@ PROMOTION_SHARE = 0.12  # Chance that a yearly change is a promotion (larger rai
 PROMOTION_RANGE = (0.10, 0.18)
 CENT = Decimal("0.01")
 PAY_ROUNDING = Decimal(100)  # Salaries are offered in round hundreds.
+# Share of an underpaid group that is actually underpaid. It must be a minority: if most of
+# a group were underpaid, the group's own median would drop and nobody would look out of band.
+UNDERPAID_SHARE = 0.3
 
 
 @dataclass(frozen=True, slots=True)
@@ -118,7 +121,7 @@ def _employee(
     currency = COUNTRY_CURRENCIES[country]
     level_usd = Decimal(base_usd) * COUNTRIES[country][1]
     for group_country, group_title, multiplier in UNDERPAID_GROUPS:
-        if (country, title) == (group_country, group_title) and rng.random() < 0.6:
+        if (country, title) == (group_country, group_title) and rng.random() < UNDERPAID_SHARE:
             level_usd *= multiplier
     individual_usd = level_usd * Decimal(str(round(rng.lognormvariate(0, PAY_SPREAD), 4)))
     salary = _round_pay(individual_usd / FX_RATES_TO_USD[currency])
