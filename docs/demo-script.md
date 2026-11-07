@@ -1,5 +1,7 @@
 # Demo script (about 3 minutes)
 
+> The finished video is [demo/acme-pay-demo.mp4](demo/acme-pay-demo.mp4), generated from this outline by the scripts in [demo/](demo/README.md). Its narration text is built from the live numbers, so figures below may differ slightly from the video.
+
 A walkthrough for the video, told from the HR manager's point of view. Use the live app (or a local one seeded with `python -m acme_pay.seed`, which gives identical numbers).
 
 ## 1. The problem (15 s)

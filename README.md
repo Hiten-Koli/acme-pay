@@ -4,6 +4,8 @@
 
 **Live:** https://acme-pay-hiten.vercel.app · **API docs:** https://acme-pay-hiten.vercel.app/api/docs · *Synthetic data only.*
 
+**Demo video (2 min 51 s, captions + AI-generated narration):** [docs/demo/acme-pay-demo.mp4](docs/demo/acme-pay-demo.mp4) · how it was made: [docs/demo](docs/demo/README.md)
+
 ![Pay Pulse](docs/screenshots/pay-pulse.png)
 
 ## What it does
@@ -42,7 +44,7 @@
 | [Architecture decisions](docs/adr/) | Why each choice was made, and what changed during delivery ([0009](docs/adr/0009-delivery-refinements.md)) |
 | [Architecture](docs/architecture.md) · [Performance](docs/performance.md) | How it fits together; measured timings |
 | [How AI was used](docs/ai/) | The rules, key prompts, and AI output that was corrected in review |
-| [Demo script](docs/demo-script.md) | The 3-minute walkthrough |
+| [Demo video](docs/demo/acme-pay-demo.mp4) · [script](docs/demo-script.md) | The 3-minute walkthrough, and the generator behind it |
 
 The **commit history** is the build log: test-first commits (`test:` before `feat:`) for every rule and endpoint.
 
