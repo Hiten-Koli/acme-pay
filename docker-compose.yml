@@ -1,0 +1,22 @@
+# Local development database. Production uses Neon (see docs/adr/0003).
+# Usage: docker compose up -d   ·   docker compose down   (add -v to wipe data)
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: acme-pay-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-acme}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-acme}
+      POSTGRES_DB: ${POSTGRES_DB:-acme_pay}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
