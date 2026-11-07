@@ -1,0 +1,77 @@
+[project]
+name = "acme-pay"
+version = "0.1.0"
+description = "ACME Pay API: salary management and pay insights for HR."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/acme_pay"]
+
+# --- Ruff: linting + formatting -------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",   # pycodestyle
+    "F",        # pyflakes
+    "I",        # isort
+    "B",        # bugbear: likely bugs
+    "UP",       # pyupgrade: modern syntax
+    "SIM",      # simplifications
+    "C4",       # comprehensions
+    "RUF",      # ruff-specific
+    "N",        # pep8-naming
+    "S",        # bandit: security
+    "DTZ",      # timezone-aware datetimes
+    "PT",       # pytest style
+    "D",        # docstrings
+]
+ignore = [
+    "D105",     # magic methods are self-explanatory
+    "D107",     # __init__ documented on the class
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "D"]   # asserts are the point; test names are the docs
+"migrations/**" = ["D"]
+
+# --- mypy: strict typing --------------------------------------------------
+[tool.mypy]
+python_version = "3.13"
+strict = true
+mypy_path = "src"
+packages = ["acme_pay"]
+
+# --- pytest ---------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "--strict-config", "-ra"]
+xfail_strict = true
+
+[tool.coverage.run]
+source = ["acme_pay"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
