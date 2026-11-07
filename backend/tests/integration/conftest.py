@@ -16,6 +16,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 
+from acme_pay.assistant.router import get_llm_provider
 from acme_pay.core.config import get_settings
 from acme_pay.core.database import get_session, to_async_url
 from acme_pay.main import create_app
@@ -84,5 +85,7 @@ async def client(session: AsyncSession) -> AsyncIterator[AsyncClient]:
         yield session
 
     app.dependency_overrides[get_session] = override_session
+    # Never call a real LLM from tests, whatever keys a developer has configured locally.
+    app.dependency_overrides[get_llm_provider] = lambda: None
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         yield client
