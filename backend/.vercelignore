@@ -1,0 +1,11 @@
+# Not needed at runtime. The deploy job creates .venv (for migrations) before deploying,
+# so without this the whole virtualenv would be uploaded with the function.
+.venv/
+tests/
+scripts/
+migrations/
+alembic.ini
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
