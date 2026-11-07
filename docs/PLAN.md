@@ -1,6 +1,6 @@
 # ACME Pay: Product & Engineering Plan
 
-> **Status:** draft for review. No code is written until this plan is approved.
+> **Status:** approved and delivered. This document is kept as written before coding; what changed during delivery, and why, is in [ADR 0009](adr/0009-delivery-refinements.md).
 > **Owner:** Hiten Koli · **Last updated:** 2026-11-07
 
 ---

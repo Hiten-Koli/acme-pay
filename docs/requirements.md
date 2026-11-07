@@ -23,7 +23,7 @@ Replace ACME's Excel-based salary management for **10,000 employees across multi
 **F4. Insights.**
 - **Pay Pulse:** headcount, payroll in USD, median salary, people outside their band, payroll by country, and highlighted signals.
 - **Benchmarks:** min, 25th percentile, median, 75th percentile, max, and average per role × country, plus cross-country comparison in USD.
-- **Distribution and outliers:** salary histogram, and people outside the 10th-to-90th percentile range of their peer group.
+- **Distribution and outliers:** salary histogram, and people outside the pay band: a compa-ratio below 0.80 or above 1.20 against their peer median ([ADR 0009](adr/0009-delivery-refinements.md)).
 
 **F5. Ask ACME Pay (AI analyst).** HR asks pay questions in natural language. The answer comes with the underlying figures as evidence. The model can only call tested analytics functions, so it never writes SQL and never sees personal data. The feature is optional and hides itself if not configured.
 

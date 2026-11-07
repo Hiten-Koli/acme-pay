@@ -1,6 +1,6 @@
 # 5. Frontend: React, Vite, TanStack, shadcn/ui, and a generated API client
 
-- **Status:** Accepted
+- **Status:** Accepted, partially superseded by [0009](0009-delivery-refinements.md)
 - **Date:** 2026-11-07
 
 ## Context

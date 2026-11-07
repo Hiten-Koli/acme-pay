@@ -1,6 +1,6 @@
 # 4. Hosting and delivery: Vercel, with GitHub Actions as the gate
 
-- **Status:** Accepted
+- **Status:** Accepted, partially superseded by [0009](0009-delivery-refinements.md)
 - **Date:** 2026-11-07
 
 ## Context
