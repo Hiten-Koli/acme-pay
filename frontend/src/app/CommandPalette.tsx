@@ -4,6 +4,7 @@ import { BarChart3, Gauge, Search, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
+  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -64,47 +65,55 @@ export function CommandPalette() {
         <kbd className="ml-auto rounded border px-1.5 text-[10px]">Ctrl K</kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={(next) => (next ? setOpen(true) : close())}>
-        <CommandInput placeholder="Search people or pages…" value={term} onValueChange={setTerm} />
-        <CommandList>
-          <CommandEmpty>{people.isFetching ? 'Searching…' : 'No results.'}</CommandEmpty>
-          {pages.length > 0 && (
-            <CommandGroup heading="Pages">
-              {pages.map(({ label, to, icon: Icon }) => (
-                <CommandItem
-                  key={to}
-                  value={`page-${label}`}
-                  onSelect={() => {
-                    close()
-                    void navigate({ to })
-                  }}
-                >
-                  <Icon />
-                  {label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          )}
-          {people.data && people.data.items.length > 0 && (
-            <CommandGroup heading="People">
-              {people.data.items.map((person) => (
-                <CommandItem
-                  key={person.id}
-                  value={`person-${person.id}`}
-                  onSelect={() => {
-                    close()
-                    void navigate({ to: '/people', search: { employee: person.id } })
-                  }}
-                >
-                  <Users />
-                  {person.first_name} {person.last_name}
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    {person.job_title} · {person.country_code}
-                  </span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          )}
-        </CommandList>
+        {/* CommandDialog does not provide the cmdk root itself, so the palette must. Filtering
+            is ours: pages are matched below and people come back already searched by the API. */}
+        <Command shouldFilter={false}>
+          <CommandInput
+            placeholder="Search people or pages…"
+            value={term}
+            onValueChange={setTerm}
+          />
+          <CommandList>
+            <CommandEmpty>{people.isFetching ? 'Searching…' : 'No results.'}</CommandEmpty>
+            {pages.length > 0 && (
+              <CommandGroup heading="Pages">
+                {pages.map(({ label, to, icon: Icon }) => (
+                  <CommandItem
+                    key={to}
+                    value={`page-${label}`}
+                    onSelect={() => {
+                      close()
+                      void navigate({ to })
+                    }}
+                  >
+                    <Icon />
+                    {label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+            {people.data && people.data.items.length > 0 && (
+              <CommandGroup heading="People">
+                {people.data.items.map((person) => (
+                  <CommandItem
+                    key={person.id}
+                    value={`person-${person.id}`}
+                    onSelect={() => {
+                      close()
+                      void navigate({ to: '/people', search: { employee: person.id } })
+                    }}
+                  >
+                    <Users />
+                    {person.first_name} {person.last_name}
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      {person.job_title} · {person.country_code}
+                    </span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        </Command>
       </CommandDialog>
     </>
   )

@@ -5,6 +5,7 @@ import {
   lazyRouteComponent,
 } from '@tanstack/react-router'
 import { AppShell } from '@/app/AppShell'
+import { RouteError } from '@/app/RouteError'
 import { PeoplePage } from '@/features/people/PeoplePage'
 import { PulsePage } from '@/features/pulse/PulsePage'
 
@@ -30,7 +31,7 @@ const text = (value: unknown): string | undefined =>
 
 const SORTS = new Set(['name', '-name', 'salary', '-salary', 'hire_date', '-hire_date'])
 
-const rootRoute = createRootRoute({ component: AppShell })
+const rootRoute = createRootRoute({ component: AppShell, errorComponent: RouteError })
 
 const pulseRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', component: PulsePage })
 
