@@ -13,6 +13,16 @@ class CurrencyMismatchError(ValueError):
     """Raised when combining money in different currencies without conversion."""
 
 
+def require_currency_code(code: str) -> None:
+    """Validate that ``code`` is shaped like an ISO 4217 currency code.
+
+    Raises:
+        ValueError: If ``code`` is not exactly three uppercase letters.
+    """
+    if not _CURRENCY_CODE.fullmatch(code):
+        raise ValueError(f"Currency must be an ISO 4217 code, got {code!r}")
+
+
 @dataclass(frozen=True, slots=True)
 class Money:
     """An exact amount in one currency.
@@ -35,8 +45,7 @@ class Money:
             raise TypeError(f"Money amount must be a Decimal, got {type(self.amount).__name__}")
         if not self.amount.is_finite():
             raise ValueError(f"Money amount must be finite, got {self.amount}")
-        if not _CURRENCY_CODE.fullmatch(self.currency):
-            raise ValueError(f"Currency must be an ISO 4217 code, got {self.currency!r}")
+        require_currency_code(self.currency)
 
     def __add__(self, other: Self) -> Self:
         self._require_same_currency(other)
