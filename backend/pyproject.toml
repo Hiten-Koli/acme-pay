@@ -73,6 +73,7 @@ packages = ["acme_pay"]
 testpaths = ["tests"]
 addopts = ["--strict-markers", "--strict-config", "-ra"]
 xfail_strict = true
+markers = ["integration: needs a running PostgreSQL (skip with -m 'not integration')"]
 
 [tool.coverage.run]
 source = ["acme_pay"]
