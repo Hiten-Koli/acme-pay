@@ -277,7 +277,7 @@ acme-pay/
 │   ├── pyproject.toml             # uv · ruff · mypy · pytest config
 │   ├── uv.lock
 │   ├── migrations/                # Alembic
-│   ├── src/acme_pay/
+│   ├── acme_pay/
 │   │   ├── main.py                # app factory
 │   │   ├── core/                  # config, db, errors, logging, security seam
 │   │   ├── domain/                # Money, CompaRatio, Percentile (pure)

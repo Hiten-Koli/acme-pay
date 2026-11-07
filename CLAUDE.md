@@ -34,7 +34,7 @@ These rules extend the global engineering rules ([docs/ai/global-engineering-rul
 Local DB: `docker compose up -d` from the repo root (copy `.env.example` to `.env` first).
 
 ## Code conventions
-- **Backend layout:** feature slices in `src/acme_pay/<feature>/` with `router.py → service.py → repository.py`, plus `models.py` and `schemas.py`. Pure rules live in `src/acme_pay/domain/` and must not do I/O. Routers hold no business logic.
+- **Backend layout:** feature slices in `backend/acme_pay/<feature>/` with `router.py → service.py → repository.py`, plus `models.py` and `schemas.py`. Pure rules live in `backend/acme_pay/domain/` and must not do I/O. Routers hold no business logic.
 - **Money:** always the `Money` value object (`Decimal` + ISO 4217 code). Never `float`. Sent over the API as a decimal string. FX conversion only through dated rates (ADR 0006).
 - **Errors:** RFC 9457 Problem Details responses.
 - **Analytics:** aggregate in SQL (`percentile_cont`), not in Python loops.
