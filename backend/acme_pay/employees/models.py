@@ -20,6 +20,8 @@ class Employee(Base):
     """A person employed by ACME, with their current annual base salary."""
 
     __tablename__ = "employees"
+    # Fetch database-generated values (employee_code, timestamps) via RETURNING.
+    __mapper_args__ = {"eager_defaults": True}  # noqa: RUF012 - SQLAlchemy declarative API
     __table_args__ = (
         CheckConstraint("salary > 0", name="ck_employees_salary_positive"),
         Index("ix_employees_country_job_title", "country_code", "job_title"),
