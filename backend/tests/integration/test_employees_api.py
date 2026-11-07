@@ -40,6 +40,12 @@ class TestCreate:
         assert employee["salary"] == "85000.00"
         assert employee["employee_code"].startswith("EMP-")
 
+    async def test_accepts_a_lowercase_country_code(self, client: AsyncClient) -> None:
+        employee = await create(client, country_code="in")
+
+        assert employee["country_code"] == "IN"
+        assert employee["currency"] == "INR"
+
     async def test_normalizes_email_to_lowercase(self, client: AsyncClient) -> None:
         employee = await create(client, email="Ada.Lovelace@ACME.example")
 

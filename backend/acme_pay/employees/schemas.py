@@ -19,7 +19,8 @@ Email = Annotated[
         strip_whitespace=True, to_lower=True, max_length=254, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
     ),
 ]
-CountryCode = Annotated[str, StringConstraints(to_upper=True, pattern=r"^[A-Z]{2}$")]
+# The pattern is checked before upper-casing, so it must accept either case.
+CountryCode = Annotated[str, StringConstraints(to_upper=True, pattern=r"^[A-Za-z]{2}$")]
 # Annual base salary: positive, at most 12 integer digits and exactly cents.
 Salary = Annotated[Decimal, Field(gt=0, max_digits=14, decimal_places=2)]
 
