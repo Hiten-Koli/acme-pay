@@ -28,3 +28,13 @@ The prompts that set the direction of the project, in order, paraphrased for bre
 > Commit with messages that let a reviewer follow how the solution evolved.
 
 **Outcome:** conventional commits with explanatory bodies, one logical change per commit, and `Co-Authored-By` trailers for transparency.
+
+## 5. Simplicity as a standing constraint
+> Don't make things complicated going forward.
+
+**Outcome:** optional machinery was cut where it added little: per-PR preview environments, a virtualized grid, a world map, a heavier client generator, Sentry. Each cut is recorded with its reasoning in [ADR 0009](../adr/0009-delivery-refinements.md).
+
+## 6. Local-first delivery
+> Now that the deployment pipeline is proven, build the rest locally, verify it locally, keep committing as we go, and push at the end.
+
+**Outcome:** each milestone was verified against a local PostgreSQL with the full 10k dataset, a running API, and a browser review of every screen before it was committed. Two corrections in the log (#6 and #7) were found this way, before any reviewer could.
