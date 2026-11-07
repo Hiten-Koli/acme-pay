@@ -4,7 +4,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from acme_pay.domain.compa_ratio import compa_ratio
+from acme_pay.domain.compa_ratio import BandPosition, band_position, compa_ratio
 from acme_pay.domain.money import CurrencyMismatchError, Money
 
 salaries = st.decimals(min_value=Decimal("0.01"), max_value=Decimal("99999999.99"), places=2)
@@ -46,3 +46,17 @@ def test_a_higher_salary_never_gets_a_lower_ratio(
     after = compa_ratio(eur(lower + raise_by), peer_median=eur(median))
 
     assert after >= before
+
+
+@pytest.mark.parametrize(
+    ("ratio", "position"),
+    [
+        ("0.79", BandPosition.BELOW),
+        ("0.80", BandPosition.WITHIN),
+        ("1.00", BandPosition.WITHIN),
+        ("1.20", BandPosition.WITHIN),
+        ("1.21", BandPosition.ABOVE),
+    ],
+)
+def test_band_is_within_twenty_percent_of_the_peer_median(ratio: str, position: str) -> None:
+    assert band_position(Decimal(ratio)) == position
